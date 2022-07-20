@@ -1,6 +1,7 @@
 N = 3
 play_field = [["-","-","-"],["-","-","-"],["-","-","-"]]
 count = 0
+check_index = []
 
 def check_turn(ind):
     global play_field
@@ -28,22 +29,34 @@ def print_field():
         print()
 
 while True:
-    step = int(input(f"\n Player {count % 2 + 1}, please input field number: "))
+    s = input(f"\n Player {count % 2 + 1}, please input field number: ")
 
-    if ((step // 10) not in [1,2,3] and (step % 10) not in [1,2,3]):
-        print("\n index of field is wrong. try again")
-        continue
+    if s.isdigit():
+        step = int(s)
+
+        if step // 10 not in [1,2,3] and step % 10 not in [1,2,3]:
+            print("\n index of field is wrong. try again")
+            continue
+        else:
+            if step in check_index:
+                print("\n This step has been already done. try again")
+                continue
+            else:
+                check_index.append(step)
+
+                play_field[step // 10 - 1][step % 10 - 1] = "x" if count % 2 == 0 else "o"
+                print_field()
+                if check_turn(int(step)):
+                    print(f"\n Player {count % 2 + 1} is winner")
+                    break
+
+                count += 1
+                if count > 8:
+                    print("\n No one is winner")
+                    break
     else:
-        play_field[step // 10 - 1][step % 10 - 1] = "x" if count % 2 == 0 else "o"
-        print_field()
-        if check_turn(step):
-            print(f"\n Player {count % 2 + 1} is winner")
-            break
-
-        count += 1
-        if count > 8:
-            print("\n No one is winner")
-            break
+        print("\n only numbers are allowed. Try again")
+        continue
 
 
 
